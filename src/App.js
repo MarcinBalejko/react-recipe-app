@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Recipe from "./Recipe";
 import dotenv from "dotenv";
 import "./App.css";
 
@@ -8,7 +9,7 @@ const App = () => {
   const APP_ID = process.env.REACT_APP_APPID;
   const APP_KEY = process.env.REACT_APP_APPKEY;
 
-  const [counter, setCounter] = useState(0);
+  const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
     getRecipes();
@@ -19,7 +20,8 @@ const App = () => {
       `https://api.edamam.com/search?q=chicken&app_id=${APP_ID}&app_key=${APP_KEY}`
     );
     const data = await response.json();
-    console.log(data);
+    setRecipes(data.hits);
+    console.log(data.hits);
   };
 
   return (
@@ -30,7 +32,13 @@ const App = () => {
           Search
         </button>
       </form>
-      <h1 onClick={() => setCounter(counter + 1)}>{counter}</h1>
+      {recipes.map(recipe => (
+        <Recipe
+          title={recipe.recipe.label}
+          calories={recipe.recipe.calories}
+          image={recipe.recipe.image}
+        />
+      ))}
     </div>
   );
 };
